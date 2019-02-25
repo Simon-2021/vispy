@@ -23,6 +23,7 @@ def test_meshdata():
 
     mesh = MeshData(vertices=square_vertices, faces=square_faces)
     # test vertices and faces assignement
+    # np.testing.assert_array_equal，如果两个数组不相同，抛出异常
     assert_array_equal(square_vertices, mesh.get_vertices())
     assert_array_equal(square_faces, mesh.get_faces())
     # test normals calculus
