@@ -30,6 +30,7 @@ class MeshData(object):
     vertices : ndarray, shape (Nv, 3)
         Vertex coordinates. If faces is not specified, then this will
         instead be interpreted as (Nf, 3, 3) array of coordinates.
+        点坐标，如果faces没有被设定，那么输入的(Nv, 3)会被解释为(Nf, 3, 3)，因为一个面由三个点构成
     faces : ndarray, shape (Nf, 3)
         Indices into the vertex array.
     edges : None
@@ -66,6 +67,7 @@ class MeshData(object):
 
     def __init__(self, vertices=None, faces=None, edges=None,
                  vertex_colors=None, face_colors=None, vertex_values=None):
+        # 点，Nf = Nv // 3, Ne = Nv //2
         self._vertices = None  # (Nv,3) array of vertex coordinates
         self._vertices_indexed_by_faces = None  # (Nf, 3, 3) vertex coordinates
         self._vertices_indexed_by_edges = None  # (Ne, 2, 3) vertex coordinates
