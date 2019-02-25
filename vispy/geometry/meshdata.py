@@ -28,6 +28,7 @@ class MeshData(object):
     Parameters
     ----------
     vertices : ndarray, shape (Nv, 3)
+    点： 点坐标，如果faces没有被指定，(Nv, 3)会被解释为(Nf, 3, 3)
         Vertex coordinates. If faces is not specified, then this will
         instead be interpreted as (Nf, 3, 3) array of coordinates.
     faces : ndarray, shape (Nf, 3)
@@ -66,6 +67,7 @@ class MeshData(object):
 
     def __init__(self, vertices=None, faces=None, edges=None,
                  vertex_colors=None, face_colors=None, vertex_values=None):
+        # Nf = Nv // 3, Ne = Nv // 2
         self._vertices = None  # (Nv,3) array of vertex coordinates
         self._vertices_indexed_by_faces = None  # (Nf, 3, 3) vertex coordinates
         self._vertices_indexed_by_edges = None  # (Ne, 2, 3) vertex coordinates
@@ -212,10 +214,10 @@ class MeshData(object):
             return None
         bounds = [(v[:, ax].min(), v[:, ax].max()) for ax in range(v.shape[1])]
         return bounds
-
+     
     def set_vertices(self, verts=None, indexed=None, reset_normals=True):
         """Set the mesh vertices
-
+        设置网格点坐标
         Parameters
         ----------
         verts : ndarray | None
@@ -225,6 +227,8 @@ class MeshData(object):
             is assumed to be already indexed as a list of faces. This will
             cause any pre-existing normal vectors to be cleared unless
             reset_normals=False.
+            如果此参数被设置为'faces',那么输入的verts的shape必须是(Nf, 3, 3)且vispy认为此数据已经被作为faces的索引。
+            这将导致任何已存在的法向量被清空除非reset_normals=False。
         reset_normals : bool
             If True, reset the normals.
         """
@@ -233,9 +237,11 @@ class MeshData(object):
                 self._vertices = verts
             self._vertices_indexed_by_faces = None
         elif indexed == 'faces':
+            # vert.shape == (Nf, 3, 3)
             self._vertices = None
             if verts is not None:
                 self._vertices_indexed_by_faces = verts
+               
         else:
             raise Exception("Invalid indexing mode. Accepts: None, 'faces'")
 
