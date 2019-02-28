@@ -176,7 +176,14 @@ class SceneCanvas(app.Canvas, Frozen):
 
     @bgcolor.setter
     def bgcolor(self, color):
-        self._bgcolor = Color(color).rgba
+        """
+        :param  color: str or RGBA tuple
+        """
+        if type(color) == str:
+            print("Set background color with color's name")
+            self._bgcolor = Color(color).rgba
+        else:
+            self._bgcolor = color
         if hasattr(self, '_backend'):
             self.update()
 
